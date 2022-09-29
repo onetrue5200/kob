@@ -1,0 +1,23 @@
+package top.onetrue.matchingsystem.service.impl;
+
+import org.springframework.stereotype.Service;
+import top.onetrue.matchingsystem.service.MatchingService;
+import top.onetrue.matchingsystem.service.impl.utils.MatchingPool;
+
+@Service
+public class MatchingServiceImpl implements MatchingService {
+    public final static MatchingPool matchingPool = new MatchingPool();
+    @Override
+    public String addPlayer(Integer userId, Integer rating) {
+        System.out.println("Add Player: " + userId + " " + rating);
+        matchingPool.addPlayer(userId, rating);
+        return "add player success";
+    }
+
+    @Override
+    public String removePlayer(Integer userId) {
+        System.out.println("Remove Player: " + userId);
+        matchingPool.removePlayer(userId);
+        return "Remove player success";
+    }
+}
