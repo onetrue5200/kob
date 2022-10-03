@@ -6,6 +6,7 @@ import org.springframework.util.MultiValueMap;
 import top.onetrue.backend.consumer.WebSocketServer;
 import top.onetrue.backend.pojo.Bot;
 import top.onetrue.backend.pojo.Record;
+import top.onetrue.backend.pojo.User;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -253,7 +254,27 @@ public class Game extends Thread {
         return res.toString();
     }
 
+    private void updateUserRating(Player player, Integer rating) {
+        User user = WebSocketServer.userMapper.selectById(player.getId());
+        user.setRating(rating);
+        WebSocketServer.userMapper.updateById(user);
+    }
+
     private void saveToDatabase() {
+        Integer ratingA = WebSocketServer.userMapper.selectById(playerA.getId()).getRating();
+        Integer ratingB = WebSocketServer.userMapper.selectById(playerB.getId()).getRating();
+
+        if ("A".equals(loser)) {
+            ratingA -= 2;
+            ratingB += 5;
+        } else if ("B".equals(loser)) {
+            ratingB -= 2;
+            ratingA += 5;
+        }
+
+        updateUserRating(playerA, ratingA);
+        updateUserRating(playerB, ratingB);
+
         Record record = new Record(
                 null,
                 playerA.getId(),
